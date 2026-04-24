@@ -7,6 +7,7 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     CORS(app)
+    app.json.sort_keys = False  # Preservar el orden de inserción del diccionario
 
     # Note: users_bp will be created by Member 3, 
     # but we need to register it here as per instructions
