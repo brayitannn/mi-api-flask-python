@@ -29,3 +29,28 @@ def create_user():
     new_user = {"id": new_id, "name": name, "email": email, "age": age}
     users.append(new_user)
     return success_response(data=new_user, message='Usuario Creado exitosamente', status_code=201)
+
+# PUT /api/users/<id> — actualiza usuario existente (parcial)
+@users_bp.route('/<int:id>', methods=['PUT'])
+def update_user(id):
+    body = request.get_json()
+    user = next((u for u in users if u['id'] == id), None)
+    if not user:
+        # Nota: el original Node.js devuelve 400 (no 404) en este caso
+        return error_response(f'Usuario con ID {id} no encontrado', 400)
+    if body.get('name'):
+        user['name']  = body['name']
+    if body.get('email'):
+        user['email'] = body['email']
+    if body.get('age'):
+        user['age']   = body['age']
+    return success_response(data=user, message='Usuario Actualizado exitosamente')
+
+# DELETE /api/users/<id> — elimina un usuario
+@users_bp.route('/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    index = next((i for i, u in enumerate(users) if u['id'] == id), -1)
+    if index == -1:
+        return error_response(f'Usuario con ID {id} no encontrado', 404)
+    deleted_user = users.pop(index)
+    return success_response(data=deleted_user, message='Usuario eliminado exitosamente')
