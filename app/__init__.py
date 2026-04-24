@@ -8,14 +8,8 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # Note: users_bp will be created by Member 3, 
-    # but we need to register it here as per instructions
-    try:
-        from app.routes.users import users_bp
-        app.register_blueprint(users_bp, url_prefix='/api/users')
-    except ImportError:
-        # Member 3 hasn't created the routes yet, this is expected
-        pass
+    from app.routes.users import users_bp
+    app.register_blueprint(users_bp, url_prefix='/api/users')
 
     @app.route('/')
     def index():
@@ -29,3 +23,4 @@ def create_app():
         return jsonify({"error": "Ruta no encontrada"}), 404
 
     return app
+
